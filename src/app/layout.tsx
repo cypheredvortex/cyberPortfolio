@@ -28,6 +28,9 @@ export const metadata: Metadata = {
     description:
       "Computer Science and Networks engineering candidate specializing in cybersecurity and network infrastructure.",
   },
+  verification: {
+    google: "s4RvUtyajhsgdCVqxuw48PiUY755vVnUsIVEYpDKPC0", 
+  },
 };
 
 export default function RootLayout({
