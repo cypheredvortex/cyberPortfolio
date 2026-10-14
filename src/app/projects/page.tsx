@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import ProjectsPageClient from "./ProjectsPageClient";
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { getMessages } from "@/i18n/messages";
+
+const messages = getMessages(DEFAULT_LOCALE);
 
 export const metadata: Metadata = {
-  title: "Projects",
-  description:
-    "Technical projects by Achraf Sghiri spanning cybersecurity, network security, and full-stack development.",
+  title: messages.metadata.projectsTitle,
+  description: messages.metadata.projectsDescription,
+  alternates: { canonical: "/projects" },
   openGraph: {
-    title: "Projects | Achraf Sghiri",
-    description:
-      "Technical projects spanning cybersecurity, network security, and full-stack development.",
+    title: messages.metadata.projectsTitle,
+    description: messages.metadata.projectsDescription,
   },
 };
 

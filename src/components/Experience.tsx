@@ -1,90 +1,114 @@
 "use client";
 
-import { Briefcase } from "lucide-react";
+import { Briefcase, MapPin } from "lucide-react";
+import { container, sectionSpacing } from "@/lib/styles";
+import { useI18n } from "@/i18n/LocaleProvider";
+import { getExperiences } from "@/data/experience";
 import AnimatedSection from "./AnimatedSection";
 import SectionHeader from "./SectionHeader";
-import { experiences } from "@/data/experience";
 
 export default function Experience() {
+  const { locale, messages } = useI18n();
+  const experiences = getExperiences(locale);
+
   return (
-    <section id="experience" className="py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <section id="experience" className={`${sectionSpacing} relative`}>
+      <div className={container}>
         <AnimatedSection>
           <SectionHeader
-            label="Experience"
-            title="Professional Background"
-            description="Internships and applied engineering work."
+            label={messages.experience.label}
+            title={messages.experience.title}
+            description={messages.experience.description}
           />
         </AnimatedSection>
 
-        <div className="space-y-8">
-          {experiences.map((exp, i) => (
-            <AnimatedSection key={exp.id} delay={i * 0.1}>
-              <article className="relative p-6 rounded-xl border border-border bg-card hover:border-primary/20 transition-colors">
-                <div className="flex items-start gap-4">
-                  <div className="shrink-0 mt-1">
-                    <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Briefcase size={18} className="text-primary" />
-                    </div>
-                  </div>
+        <ol className="relative mt-12 space-y-5">
+          <span
+            aria-hidden="true"
+            className="absolute bottom-10 left-[1.4rem] top-10 hidden w-px bg-gradient-to-b from-primary/45 via-border to-transparent sm:block"
+          />
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-3">
+          {experiences.map((experience, index) => (
+            <li key={experience.id}>
+              <AnimatedSection delay={index * 0.08}>
+                <article className="relative flex gap-4 sm:gap-5">
+                  <span
+                    aria-hidden="true"
+                    className="relative z-10 mt-6 hidden h-11 w-11 shrink-0 place-items-center rounded-xl border border-primary/25 bg-card shadow-panel sm:grid"
+                  >
+                    <Briefcase size={17} className="text-primary-light" />
+                  </span>
+
+                  <div className="panel panel-glow w-full p-5 sm:p-6">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div>
-                        <h3 className="text-lg font-semibold text-foreground">
-                          {exp.role}
+                        <h3 className="font-display text-lg font-semibold leading-snug tracking-tight text-foreground">
+                          {experience.role}
                         </h3>
-                        <p className="text-sm text-primary">
-                          {exp.company}
+                        <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                          <span className="text-primary-light">
+                            {experience.company}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 text-faint">
+                            <MapPin size={12} aria-hidden="true" />
+                            {experience.location}
+                          </span>
                         </p>
                       </div>
-                      <span className="text-xs font-mono text-muted-foreground shrink-0">
-                        {exp.period}
+                      <span className="chip shrink-0 self-start">
+                        {experience.period}
                       </span>
                     </div>
 
-                    <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-                      {exp.context}
+                    <p className="mt-4 text-sm font-medium leading-relaxed text-foreground/90">
+                      {experience.description}
                     </p>
 
-                    <div className="mb-4">
-                      <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">
-                        What I Did
+                    <p className="mt-4 flex flex-col gap-1.5 text-sm leading-relaxed text-muted-foreground">
+                      <span className="mono-label text-faint">
+                        {messages.experience.contextTitle}
+                      </span>
+                      {experience.context}
+                    </p>
+
+                    <div className="mt-5 border-t border-border/70 pt-4">
+                      <h4 className="mono-label text-faint">
+                        {messages.experience.responsibilitiesTitle}
                       </h4>
-                      <ul className="space-y-1.5">
-                        {exp.responsibilities.map((resp, j) => (
+                      <ul className="mt-3 space-y-2">
+                        {experience.responsibilities.map((item) => (
                           <li
-                            key={j}
-                            className="flex items-start gap-2 text-sm text-muted-foreground"
+                            key={item}
+                            className="flex items-start gap-2.5 text-sm leading-relaxed text-muted-foreground"
                           >
-                            <span className="mt-1.5 h-1 w-1 rounded-full bg-primary/60 shrink-0" />
-                            {resp}
+                            <span
+                              aria-hidden="true"
+                              className="mt-[0.45rem] h-1 w-1 shrink-0 rounded-full bg-primary/70"
+                            />
+                            {item}
                           </li>
                         ))}
                       </ul>
                     </div>
 
-                    <div>
-                      <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-2">
-                        Technologies & Tools
+                    <div className="mt-5">
+                      <h4 className="mono-label text-faint">
+                        {messages.experience.technologiesTitle}
                       </h4>
-                      <div className="flex flex-wrap gap-1.5">
-                        {exp.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="px-2 py-0.5 text-xs font-mono text-muted-foreground bg-muted rounded"
-                          >
-                            {tech}
-                          </span>
+                      <ul className="mt-3 flex flex-wrap gap-1.5">
+                        {experience.technologies.map((technology) => (
+                          <li key={technology} className="chip">
+                            {technology}
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </div>
                   </div>
-                </div>
-              </article>
-            </AnimatedSection>
+                </article>
+              </AnimatedSection>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

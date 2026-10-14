@@ -2,49 +2,60 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { container, sectionSpacing, buttonClasses } from "@/lib/styles";
+import { useI18n } from "@/i18n/LocaleProvider";
+import { getFeaturedProjects } from "@/data/projects";
 import AnimatedSection from "./AnimatedSection";
 import SectionHeader from "./SectionHeader";
 import ProjectCard from "./ProjectCard";
-import { getFeaturedProjects } from "@/data/projects";
 
 export default function FeaturedProjects() {
-  const featured = getFeaturedProjects();
+  const { locale, messages } = useI18n();
+  const featured = getFeaturedProjects(locale);
 
   return (
-    <section id="projects" className="py-24 sm:py-32 bg-card/30">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <section id="projects" className={`${sectionSpacing} relative`}>
+      <div className={container}>
         <AnimatedSection>
-          <div className="flex items-end justify-between mb-12">
-            <SectionHeader
-              label="Projects"
-              title="Selected technical work"
-              description="Security and infrastructure projects first, followed by supporting software-development work."
-            />
-            <Link
-              href="/projects"
-              className="hidden sm:inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 transition-colors shrink-0 mb-12"
-            >
-              View all
-              <ArrowRight size={14} />
-            </Link>
-          </div>
+          <SectionHeader
+            label={messages.projects.label}
+            title={messages.projects.homeTitle}
+            description={messages.projects.homeDescription}
+            actions={
+              <Link
+                href="/projects"
+                className={buttonClasses("secondary", "hidden sm:inline-flex")}
+              >
+                {messages.projects.viewAll}
+                <ArrowRight
+                  size={14}
+                  aria-hidden="true"
+                  className="transition-transform duration-300 group-hover:translate-x-0.5"
+                />
+              </Link>
+            }
+          />
         </AnimatedSection>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {featured.map((project, i) => (
-            <AnimatedSection key={project.slug} delay={i * 0.08}>
-              <ProjectCard project={project} />
+        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {featured.map((project, index) => (
+            <AnimatedSection
+              key={project.slug}
+              delay={index * 0.08}
+              className="h-full min-w-0"
+            >
+              <ProjectCard project={project} index={index} />
             </AnimatedSection>
           ))}
         </div>
 
-        <div className="mt-8 sm:hidden text-center">
+        <div className="mt-8 sm:hidden">
           <Link
             href="/projects"
-            className="inline-flex items-center gap-1.5 text-sm text-primary hover:text-primary/80 transition-colors"
+            className={buttonClasses("secondary", "w-full")}
           >
-            View all projects
-            <ArrowRight size={14} />
+            {messages.projects.viewAllMobile}
+            <ArrowRight size={14} aria-hidden="true" />
           </Link>
         </div>
       </div>
