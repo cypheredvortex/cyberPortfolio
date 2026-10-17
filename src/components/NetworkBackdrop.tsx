@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useReducedMotion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 /** Topology links, drawn once as static data. */
 const LINKS = [
@@ -43,7 +44,13 @@ const NODES = [
  * movement only shifts the transform of this single layer, so no React state
  * updates occur while moving the mouse.
  */
-export default function NetworkBackdrop() {
+export default function NetworkBackdrop({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
 
@@ -87,7 +94,11 @@ export default function NetworkBackdrop() {
     <div
       ref={wrapperRef}
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 -z-10 opacity-70 will-change-transform [mask-image:radial-gradient(ellipse_75%_70%_at_62%_38%,#000_20%,transparent_78%)]"
+      style={style}
+      className={cn(
+        "pointer-events-none absolute inset-0 -z-10 will-change-transform [mask-image:radial-gradient(ellipse_75%_70%_at_62%_38%,#000_20%,transparent_78%)]",
+        className
+      )}
     >
       <svg
         viewBox="0 0 800 480"

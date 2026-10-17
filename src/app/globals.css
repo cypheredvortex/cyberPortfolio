@@ -414,6 +414,111 @@
   .link-underline:focus-visible::after {
     width: 100%;
   }
+
+  /* ========================================================================
+     Depth layer
+     Real-time WebGL supplies the hero environment; these rules supply the
+     compositing, CSS-3D card material, and the small amount of depth used by
+     the rest of the page so the whole site shares one art direction.
+     ===================================================================== */
+
+  /* The live scene fades in over the SVG fallback once its first frame has
+     actually painted. The radial mask dissolves the canvas edges into the
+     page instead of ending on a visible rectangle. */
+  .hero-scene {
+    -webkit-mask-image: radial-gradient(
+      ellipse 94% 88% at 63% 46%,
+      #000 44%,
+      transparent 88%
+    );
+    mask-image: radial-gradient(
+      ellipse 94% 88% at 63% 46%,
+      #000 44%,
+      transparent 88%
+    );
+  }
+
+  .hero-scene canvas {
+    position: absolute !important;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0;
+    transition: opacity 1.1s ease;
+  }
+
+  .hero-scene[data-state="ready"] canvas {
+    opacity: 0.88;
+  }
+
+  /* Warm the space behind the portrait so the card reads as a lit object
+     floating in front of the scene rather than a flat rectangle on top. */
+  .hero-card-aura {
+    position: absolute;
+    inset: -1.5rem;
+    z-index: 0;
+    border-radius: 2rem;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        62% 58% at 68% 18%,
+        rgba(79, 131, 255, 0.26),
+        transparent 70%
+      ),
+      radial-gradient(
+        54% 46% at 26% 92%,
+        rgba(34, 211, 238, 0.12),
+        transparent 72%
+      );
+    filter: blur(22px);
+  }
+
+  .hero-card-aura + aside {
+    z-index: 1;
+  }
+
+  /* Display type gets a soft cast shadow; the gradient glyphs get a cooler
+     bloom so the headline sits slightly above the page. */
+  .hero-title {
+    filter: drop-shadow(0 22px 34px rgba(3, 5, 11, 0.55));
+  }
+
+  .hero-title .text-gradient {
+    filter: drop-shadow(0 10px 26px rgba(79, 131, 255, 0.24));
+  }
+
+  /* CSS-3D card material ------------------------------------------------ */
+  .tilt-root {
+    perspective: 1100px;
+    perspective-origin: 50% 40%;
+  }
+
+  .tilt-inner {
+    transform-style: preserve-3d;
+    border-radius: var(--radius-xl);
+  }
+
+  .tilt-glare {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    border-radius: var(--radius-xl);
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(
+      18rem circle at var(--tilt-gx, 50%) var(--tilt-gy, 50%),
+      rgba(123, 167, 255, 0.16),
+      rgba(34, 211, 238, 0.05) 38%,
+      transparent 66%
+    );
+    mix-blend-mode: screen;
+    transition: opacity 0.45s ease;
+  }
+
+  .tilt-root:hover .tilt-glare,
+  .tilt-root:focus-within .tilt-glare {
+    opacity: 1;
+  }
 }
 
 /* ==========================================================================
@@ -425,10 +530,12 @@
 
 .js-enhanced [data-reveal] {
   opacity: 0;
-  transform: translateY(18px);
+  /* Reveal from slightly behind the page plane, not just upward. */
+  transform: perspective(1400px) translate3d(0, 20px, -36px) rotateX(1.6deg);
+  transform-origin: 50% 100%;
   transition:
-    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* One-shot entrance for hero furniture. The hero heading itself is never
@@ -451,7 +558,7 @@
 
 .js-enhanced [data-reveal].is-revealed {
   opacity: 1;
-  transform: none;
+  transform: perspective(1400px) translate3d(0, 0, 0) rotateX(0deg);
 }
 
 /* ==========================================================================
@@ -491,5 +598,44 @@ html.locale-pending body {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+
+  .tilt-inner {
+    transform: none !important;
+  }
+
+  .tilt-glare {
+    display: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .hero-scene {
+    -webkit-mask-image: radial-gradient(
+      ellipse 100% 74% at 50% 48%,
+      #000 30%,
+      transparent 86%
+    );
+    mask-image: radial-gradient(
+      ellipse 100% 74% at 50% 48%,
+      #000 30%,
+      transparent 86%
+    );
+  }
+}
+
+/* On phones the lattice sits behind body copy, so it is dimmed further: the
+   environment should be felt, not compete with the text. */
+@media (max-width: 640px) {
+  .hero-scene[data-state="ready"] canvas {
+    opacity: 0.55;
+  }
+}
+
+/* A tap leaves hover styles stuck on touch devices; the tilt is mouse-only,
+   so its highlight should be too. */
+@media (hover: none) {
+  .tilt-glare {
+    display: none;
   }
 }
