@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowDown, ArrowRight, Mail } from "lucide-react";
 import { container, buttonClasses } from "@/lib/styles";
@@ -90,56 +91,75 @@ export default function Hero() {
             style={{ animationDelay: "0.16s" }}
             className="min-w-0 lg:col-span-5"
           >
-            <aside className="panel panel-glow p-6">
-              <div className="flex items-center justify-between">
-                <h2 className="mono-label text-primary-light">
-                  {messages.hero.snapshotTitle}
-                </h2>
-                <span
+            <aside className="panel panel-glow overflow-hidden">
+              <div className="relative aspect-square w-full border-b border-border bg-muted">
+                <Image
+                  src="/portrait.jpg"
+                  alt={messages.hero.portraitAlt}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 30rem, 100vw"
+                  className="object-cover object-top"
+                />
+                <div
                   aria-hidden="true"
-                  className="flex items-center gap-1.5 font-mono text-[0.625rem] text-faint"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-success" />
-                  Rabat
-                </span>
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card/70 via-transparent to-transparent"
+                />
               </div>
 
-              <dl className="mt-5 space-y-4 text-sm">
-                <div>
-                  <dt className="mono-label text-faint">
-                    {messages.hero.specialization}
-                  </dt>
-                  <dd className="mt-1.5 leading-relaxed text-foreground">
-                    {profile.titleShort}
-                  </dd>
+              <div className="p-5">
+                <div className="flex items-center justify-between">
+                  <h2 className="mono-label text-primary-light">
+                    {messages.hero.snapshotTitle}
+                  </h2>
+                  <span
+                    aria-hidden="true"
+                    className="flex items-center gap-1.5 font-mono text-[0.625rem] text-faint"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-success" />
+                    Rabat
+                  </span>
                 </div>
-                <div className="hairline" aria-hidden="true" />
-                <div>
-                  <dt className="mono-label text-faint">
-                    {messages.hero.education}
-                  </dt>
-                  <dd className="mt-1.5 leading-relaxed text-foreground">
-                    {profile.educationShort}
-                  </dd>
-                </div>
-                <div className="hairline" aria-hidden="true" />
-                <div>
-                  <dt className="mono-label text-faint">
-                    {messages.hero.languages}
-                  </dt>
-                  <dd className="mt-2 flex flex-wrap gap-2">
-                    {languages.map((language) => (
-                      <span key={language.name} className="chip">
-                        <span className="text-foreground">{language.name}</span>
-                        <span aria-hidden="true" className="text-faint">
-                          ·
+
+                <dl className="mt-4 space-y-3 text-sm">
+                  <div>
+                    <dt className="mono-label text-faint">
+                      {messages.hero.specialization}
+                    </dt>
+                    <dd className="mt-1.5 leading-relaxed text-foreground">
+                      {profile.titleShort}
+                    </dd>
+                  </div>
+                  <div className="hairline" aria-hidden="true" />
+                  <div>
+                    <dt className="mono-label text-faint">
+                      {messages.hero.education}
+                    </dt>
+                    <dd className="mt-1.5 leading-relaxed text-foreground">
+                      {profile.educationShort}
+                    </dd>
+                  </div>
+                  <div className="hairline" aria-hidden="true" />
+                  <div>
+                    <dt className="mono-label text-faint">
+                      {messages.hero.languages}
+                    </dt>
+                    <dd className="mt-2 flex flex-wrap gap-2">
+                      {languages.map((language) => (
+                        <span key={language.name} className="chip">
+                          <span className="text-foreground">
+                            {language.name}
+                          </span>
+                          <span aria-hidden="true" className="text-faint">
+                            ·
+                          </span>
+                          {language.level}
                         </span>
-                        {language.level}
-                      </span>
-                    ))}
-                  </dd>
-                </div>
-              </dl>
+                      ))}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
             </aside>
           </div>
         </div>
